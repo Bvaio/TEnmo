@@ -16,10 +16,10 @@ public AccountJdbcDao(JdbcTemplate jdbcTemplate){
 }
 
     @Override
-    public BigDecimal getBalance(int id) {
-    String sql = ("SELECT balance FROM account WHERE account_id = ?");
+    public BigDecimal getBalance( int id ) {
+        String sql = ("SELECT balance FROM account WHERE user_id = ( SELECT user_id FROM tenmo_user WHERE user_id = ? )");
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
-        if(results.next()){
+        if (results.next()) {
             return results.getBigDecimal("balance");
         }
         return null;
