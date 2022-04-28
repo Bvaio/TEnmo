@@ -2,6 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -99,6 +100,10 @@ public class App {
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
+        for(Transfer transfer: transferService.transferList(currentUser)){
+            System.out.println(transfer.toString());
+        }
+
 		
 	}
 

@@ -21,6 +21,7 @@ public class TransferJdbcDao implements TransferDao {
         this.accountJdbcDao = new AccountJdbcDao( jdbcTemplate );
     }
 
+
     @Override
     public List< String > userList() {
         List< String > users = new ArrayList<>();
@@ -79,6 +80,24 @@ public class TransferJdbcDao implements TransferDao {
             }
         }
         return updateStatusSuccess;
+    }
+
+    @Override
+    public List<Transfer> transferList(int from_id) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT * FROM transfer WHERE account_from = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, getAccountIdFromUserId(from_id));
+        while (results.next()) {
+            Transfer transfer = new Transfer();
+            transfer.setTransfer_id(results.getInt("transfer_id"));
+            transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
+            transfer.setAmount(results.getBigDecimal("amount"));
+            transfer.setTransfer_status_id(results.getInt("transfer_status"));
+            transfer.setAccount_from(results.getInt("account_from"));
+            transfer.setAccount_to(results.getInt("account_to"));
+            transfers.add(transfer);
+        }
+        return transfers;
     }
 
 

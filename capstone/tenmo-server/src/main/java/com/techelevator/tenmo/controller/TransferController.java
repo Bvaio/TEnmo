@@ -31,6 +31,12 @@ public class TransferController {
         return transferDao.userList();
     }
 
+
+    @RequestMapping(path = "/transfer_list", method = RequestMethod.GET)
+    public List<Transfer> transferList(Principal principal){
+        return transferDao.transferList(userDao.findIdByUsername(principal.getName());
+    }
+
     @RequestMapping( path = "/transfer/{to_id}/{amount}", method = RequestMethod.POST )
     public boolean addTransfer(Principal principal, @PathVariable int to_id, @PathVariable BigDecimal amount ) {
         return transferDao.sendBucks( userDao.findIdByUsername( principal.getName() ), to_id, amount );

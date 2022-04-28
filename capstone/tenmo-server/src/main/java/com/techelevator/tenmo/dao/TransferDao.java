@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface TransferDao {
     public List< String > userList();
-//    public Transfer addTransfer( int from_id, int to_id, BigDecimal amount );
+    public Transfer addTransfer( int from_id, int to_id, BigDecimal amount );
     public boolean sendBucks( int from_id, int to_id, BigDecimal amount );
+
+    public List<Transfer> transferList(int from_id);
 
 }
