@@ -44,6 +44,19 @@ public class TransferJdbcDao implements TransferDao {
         return users;
     }
 
+    @Override
+    public List<Transfer> transferList(int from_id) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer WHERE account_from = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, getAccountIdFromUserId(from_id));
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            transfers.add(transfer);
+        }
+        return transfers;
+    }
+
+
 //    transfer Type : { 1 : Request, 2 : Send }
 //    transfer status: { 1 : Pending, 2 : Approved, 3 : Rejected }
 
@@ -82,23 +95,6 @@ public class TransferJdbcDao implements TransferDao {
         return updateStatusSuccess;
     }
 
-    @Override
-    public List<Transfer> transferList(int from_id) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer WHERE account_from = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, getAccountIdFromUserId(from_id));
-        while (results.next()) {
-            Transfer transfer = new Transfer();
-            transfer.setTransfer_id(results.getInt("transfer_id"));
-            transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
-            transfer.setAmount(results.getBigDecimal("amount"));
-            transfer.setTransfer_status_id(results.getInt("transfer_status"));
-            transfer.setAccount_from(results.getInt("account_from"));
-            transfer.setAccount_to(results.getInt("account_to"));
-            transfers.add(transfer);
-        }
-        return transfers;
-    }
 
 
     private boolean checkBalanceAccount( int from_id, BigDecimal amount ) {
@@ -130,5 +126,16 @@ public class TransferJdbcDao implements TransferDao {
         fromAccountSuccess = jdbcTemplate.update( transferFromAccount, amount, from_id ) == 1;
 
         return toAccountSuccess && fromAccountSuccess;
+    }
+
+    private Transfer mapRowToTransfer(SqlRowSet results){
+        Transfer transfer = new Transfer();
+        transfer.setTransfer_id(results.getInt("transfer_id"));
+        transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
+        transfer.setAmount(results.getBigDecimal("amount"));
+        transfer.setTransfer_status_id(results.getInt("transfer_status"));
+        transfer.setAccount_from(results.getInt("account_from"));
+        transfer.setAccount_to(results.getInt("account_to"));
+        return transfer;
     }
 }
