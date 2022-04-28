@@ -22,29 +22,32 @@ public class TransferController {
         this.userDao = userDao;
     }
 
-//    @RequestMapping( path = "/transfer", method = RequestMethod.GET )
-//    public List<String> listUsers() {
-//        return transferDao.userList();
-//    }
     @RequestMapping( path = "/users", method = RequestMethod.GET )
     public List< String > listUsers() {
         return transferDao.userList();
     }
 
-    @RequestMapping(path = "/transfer/list", method = RequestMethod.GET)
-    public List<Transfer> transferList( Principal principal ){
+//    @RequestMapping(path = "/list", method = RequestMethod.GET)
+//    public List<Transfer> transferList( /*Principal principal */){
+//        return transferDao.transferList( /*userDao.findIdByUsername( principal.getName() )*/ );
+//    }
+    @RequestMapping(path = "/list", method = RequestMethod.GET)
+    public List<String> transferList( Principal principal ){
         return transferDao.transferList( userDao.findIdByUsername( principal.getName() ) );
     }
 
-    @RequestMapping( path = "/transfer/{to_id}/{amount}", method = RequestMethod.POST )
-    public boolean addTransfer( Principal principal, @PathVariable int to_id, @PathVariable BigDecimal amount ) {
-        return transferDao.sendBucks( userDao.findIdByUsername( principal.getName() ), to_id, amount );
+//    @RequestMapping( path = "/transfer/{to_id}/{amount}", method = RequestMethod.POST )
+//    public boolean addTransfer( Principal principal, @PathVariable int to_id, @PathVariable BigDecimal amount ) {
+//        return transferDao.sendBucks( userDao.findIdByUsername( principal.getName() ), to_id, amount );
+//    }
+    @RequestMapping( path = "/transfer", method = RequestMethod.POST )
+    public boolean addTransfer( Principal principal, @RequestBody Transfer transfer ) {
+        return transferDao.addTransfer( userDao.findIdByUsername( principal.getName() ), transfer );
     }
 
-//    @RequestMapping( path = "/transfer/{id}", method = RequestMethod.PUT )
-//    public boolean sendBucks(Principal principal, @PathVariable int id ) {
-//        return false;
-//        return transferDao.sendBucks( userDao.findIdByUsername(principal.getName()), id, amount );
-//    }
+    @RequestMapping( path = "/transfer/send", method = RequestMethod.PUT )
+    public boolean sendBucks(Principal principal, @RequestBody Transfer transfer ) {
+        return transferDao.sendBucks( userDao.findIdByUsername(principal.getName()), transfer );
+    }
 
 }

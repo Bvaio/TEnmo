@@ -45,9 +45,10 @@ public class Transfer {
         this.transfer_status_id = transfer_status_id;
     }
 
-    public int getAccount_from(int account_from) {
+    public int getAccount_from(/*int account_from*/) {
         return this.account_from;
     }
+
 
     public void setAccount_from(int account_from) {
         this.account_from = account_from;
@@ -67,5 +68,10 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Transfer ID: " + transfer_id + "  ||  amount: " + amount;
     }
 }
