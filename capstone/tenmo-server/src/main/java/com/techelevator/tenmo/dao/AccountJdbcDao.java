@@ -10,10 +10,11 @@ import java.security.Principal;
 
 @Component
 public class AccountJdbcDao implements AccountDao{
-private JdbcTemplate jdbcTemplate;
-public AccountJdbcDao(JdbcTemplate jdbcTemplate){
-    this.jdbcTemplate = jdbcTemplate;
-}
+    private JdbcTemplate jdbcTemplate;
+
+    public AccountJdbcDao(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public BigDecimal getBalance( int id ) {
