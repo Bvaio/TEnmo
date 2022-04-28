@@ -16,9 +16,9 @@ public class TransferJdbcDao implements TransferDao {
     private JdbcTemplate jdbcTemplate;
     private AccountJdbcDao accountJdbcDao;
 
-    public TransferJdbcDao(JdbcTemplate jdbcTemplate ) {
+    public TransferJdbcDao(JdbcTemplate jdbcTemplate, AccountJdbcDao accountJdbcDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.accountJdbcDao = new AccountJdbcDao( jdbcTemplate );
+        this.accountJdbcDao = accountJdbcDao;
     }
 
 
