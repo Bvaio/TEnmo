@@ -37,15 +37,30 @@ public class TransferService {
         return restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, entity, User[].class).getBody();
     }
 
-    public String[] transferList(AuthenticatedUser currentUser){
+    public Transfer[] transferList(AuthenticatedUser currentUser){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(currentUser.getToken());
         HttpEntity<Transfer[]> entity = new HttpEntity<>(httpHeaders);
 
-        String[] transfers = null;
+        Transfer[] transfers = null;
         try{
-            transfers = restTemplate.exchange(API_BASE_URL + "/list", HttpMethod.GET, entity, String[].class).getBody();
+            transfers = restTemplate.exchange(API_BASE_URL + "/list", HttpMethod.GET, entity, Transfer[].class).getBody();
+        } catch (RestClientResponseException | ResourceAccessException ex){
+            BasicLogger.log(ex.getMessage());
+        }
+        return transfers;
+    }
+
+    public String transferListDetail(AuthenticatedUser currentUser, int transfer_id ){ // work on getting this to work
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(currentUser.getToken());
+        HttpEntity<Transfer> entity = new HttpEntity<>(httpHeaders);
+
+        String transfers = null;
+        try{
+            transfers = restTemplate.exchange(API_BASE_URL + "/list/" + transfer_id, HttpMethod.GET, entity, String.class).getBody();
         } catch (RestClientResponseException | ResourceAccessException ex){
             BasicLogger.log(ex.getMessage());
         }

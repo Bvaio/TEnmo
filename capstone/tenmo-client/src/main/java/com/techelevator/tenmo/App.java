@@ -100,13 +100,24 @@ public class App {
 
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
-        for (String transfer : transferService.transferList(currentUser)) {
+        Transfer[] transfers = transferService.transferList( currentUser );
+        for (Transfer transfer : transfers ) {
             System.out.println();
-            System.out.println(transfer);
+            System.out.println( transfer.details() );
             System.out.println();
         }
-
-
+        int findTransfer = consoleService.promptForInt("Select ID to check: ");
+        String printDetail = "";
+        for ( Transfer transfer : transfers ) {
+            if ( transfer.getTransfer_id() == findTransfer ) {
+                printDetail = transferService.transferListDetail( currentUser, findTransfer);
+            }
+        }
+        if ( printDetail.length() > 0 ) {
+            System.out.println( printDetail );
+        } else {
+            System.out.println( "Transfer Id not found" );
+        }
     }
 
     private void viewPendingRequests() {

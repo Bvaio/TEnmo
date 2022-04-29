@@ -60,17 +60,37 @@ public class TransferJdbcDao implements TransferDao {
 //        }
 //        return transfers;
 //    }
+
     @Override
-    public List<String> transferList( int from_id ) {
+    public List< Transfer > transferList( int from_id ) {
+        List< Transfer > transfers = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount FROM transfer WHERE account_from = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ) );
+        while ( results.next() ) {
+            Transfer transfer = new Transfer();
+            transfer.setTransfer_id(results.getInt("transfer_id"));
+            transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
+            transfer.setTransfer_status_id(results.getInt("transfer_status_id"));
+            transfer.setUserNameFrom( getUsernameFromAccountId( results.getInt("account_from") ) );
+            transfer.setUserNameTo( getUsernameFromAccountId( results.getInt("account_to") ) );
+            transfer.setAmount(results.getBigDecimal("amount"));
+
+            transfers.add( transfer );
+        }
+        return transfers;
+    }
+
+    @Override
+    public List<String> transferListDetail( int from_id, int transfer_id ) {
         List<String> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_status_desc, transfer_type_desc, account_from, account_to, amount " +
                 "FROM transfer JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id\n" +
                 "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id\n" +
-                "WHERE account_from = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ) );
+                "WHERE account_from = ? AND transfer_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ), transfer_id );
         while ( results.next() ) {
             Transfer transfer = mapRowToTransferDisplay( results );
-            transfers.add( transfer.display());
+            transfers.add( transfer.details() );
         }
         return transfers;
     }
@@ -151,8 +171,6 @@ public class TransferJdbcDao implements TransferDao {
         }
         return updateStatusSuccess;
     }
-
-
 
     private boolean checkBalanceAccount( int from_id, BigDecimal amount ) {
         return accountJdbcDao.getBalance( from_id ).compareTo( amount ) >= 0;
