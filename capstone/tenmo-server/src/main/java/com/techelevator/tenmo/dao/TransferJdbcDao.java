@@ -89,8 +89,8 @@ public class TransferJdbcDao implements TransferDao {
 
     @Override
     public boolean addTransfer( int from_id, Transfer transfer ) {
-        String sql = "INSERT INTO transfer ( transfer_type_id, transfer_status_id, account_from, account_to, amount ) VALUES ( ?, ?, ?, ?, ?, ? );";
-        return jdbcTemplate.update( sql, transfer.getTransfer_type_id(), transfer.getTransfer_status_id(), getAccountIdFromUserId( from_id ), transfer.getAccount_to(), transfer.getAmount()  ) == 1;
+        String sql = "INSERT INTO transfer ( transfer_type_id, transfer_status_id, account_from, account_to, amount ) VALUES ( ?, ?, ?, ?, ? );";
+        return jdbcTemplate.update( sql, transfer.getTransfer_type_id(), transfer.getTransfer_status_id(), getAccountIdFromUserId( from_id ), getAccountIdFromUserId( transfer.getAccount_to() ), transfer.getAmount() ) == 1;
 
 //        if ( results.next() ) {
 //            transfer = new Transfer();
