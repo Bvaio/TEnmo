@@ -125,7 +125,7 @@ public class TransferJdbcDao implements TransferDao {
         boolean updateStatusSuccess = false;
 
         if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 1 ) {
-            int toAccountID = transfer.getAccount_to();
+            int toAccountID = getAccountIdFromUserId( transfer.getAccount_to() );
             boolean updateBalance = false;
 
             if (checkBalanceAccount(from_id, transfer.getAmount())) {
