@@ -9,6 +9,10 @@ public class Transfer {
     private int account_from;
     private int account_to;
     private BigDecimal amount;
+    private String transfer_type_desc;
+    private String transfer_status_desc;
+    private String userNameFrom;
+    private String userNameTo;
 
     public Transfer() {}
 
@@ -19,6 +23,31 @@ public class Transfer {
         this.account_from = account_from;
         this.account_to = account_to;
         this.amount = amount;
+    }
+
+    public Transfer(int transfer_id, int account_from, int account_to, BigDecimal amount, String transfer_type_desc, String transfer_status_desc) {
+        this.transfer_id = transfer_id;
+        this.account_from = account_from;
+        this.account_to = account_to;
+        this.amount = amount;
+        this.transfer_type_desc = transfer_type_desc;
+        this.transfer_status_desc = transfer_status_desc;
+    }
+
+    public String getUserNameFrom() {
+        return userNameFrom;
+    }
+
+    public void setUserNameFrom(String userNameFrom) {
+        this.userNameFrom = userNameFrom;
+    }
+
+    public String getUserNameTo() {
+        return userNameTo;
+    }
+
+    public void setUserNameTo(String userNameTo) {
+        this.userNameTo = userNameTo;
     }
 
     public int getTransfer_id() {
@@ -68,6 +97,21 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+    public String getTransfer_type_desc() {
+        return transfer_type_desc;
+    }
+
+    public void setTransfer_type_desc(String transfer_type_desc) {
+        this.transfer_type_desc = transfer_type_desc;
+    }
+
+    public String getTransfer_status_desc() {
+        return transfer_status_desc;
+    }
+
+    public void setTransfer_status_desc(String transfer_status_desc) {
+        this.transfer_status_desc = transfer_status_desc;
     }
 
     @Override
