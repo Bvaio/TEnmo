@@ -69,7 +69,7 @@ public class TransferJdbcDao implements TransferDao {
                 "WHERE account_from = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ) );
         while ( results.next() ) {
-            Transfer transfer = mapRowToTransfer(results);
+            Transfer transfer = mapRowToTransferDisplay( results );
             transfers.add( transfer.toString() );
         }
         return transfers;
@@ -193,7 +193,27 @@ public class TransferJdbcDao implements TransferDao {
         transfer.setAccount_from(results.getInt("account_from"));
         transfer.setAccount_to(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));
-
         return transfer;
+    }
+
+    private Transfer mapRowToTransferDisplay( SqlRowSet results ) {
+        Transfer transfer = new Transfer();
+        transfer.setTransfer_id(results.getInt("transfer_id"));
+        transfer.setTransfer_type_desc( results.getString("transfer_type_desc") );
+        transfer.setTransfer_status_desc( results.getString("transfer_status_desc") );
+        transfer.setUserNameFrom( getUsernameFromAccountId( results.getInt("account_from") ) );
+        transfer.setUserNameTo( getUsernameFromAccountId( results.getInt("account_to") ) );
+        transfer.setAmount(results.getBigDecimal("amount") );
+        return transfer;
+    }
+
+    private String getUsernameFromAccountId( int account_id ) {
+        String username = "";
+        String sql = "SELECT username FROM tenmo_user WHERE user_id = ( SELECT user_id FROM account WHERE account_id = ? );";
+        SqlRowSet findUsername = jdbcTemplate.queryForRowSet( sql, account_id );
+        if ( findUsername.next() ) {
+            username = findUsername.getString( "username" );
+        }
+        return username;
     }
 }

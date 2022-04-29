@@ -118,4 +118,14 @@ public class Transfer {
     public String toString() {
         return "Transfer ID: " + transfer_id + "  ||  amount: " + amount;
     }
+
+    public String display() {
+        return "Id: " + transfer_id
+        "\nFrom: " +
+        "\nTo: " +
+        "\nType: " +
+        "\nStatus: " +
+        "\nAmount: " +
+
+    }
 }
