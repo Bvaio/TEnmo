@@ -100,8 +100,8 @@ public class App {
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-        for(Transfer transfer: transferService.transferList(currentUser)){
-            System.out.println(transfer.toString());
+        for(String transfer: transferService.transferList(currentUser)){
+            System.out.println(transfer);
         }
 
 		

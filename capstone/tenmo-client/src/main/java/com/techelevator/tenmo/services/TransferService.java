@@ -52,15 +52,15 @@ public class TransferService {
 //        return null;
     }
 
-    public Transfer[] transferList(AuthenticatedUser currentUser){
+    public String[] transferList(AuthenticatedUser currentUser){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(currentUser.getToken());
         HttpEntity<Transfer[]> entity = new HttpEntity<>(httpHeaders);
 
-        Transfer[] transfers = null;
+        String[] transfers = null;
         try{
-            transfers = restTemplate.exchange(API_BASE_URL + "/list", HttpMethod.GET, entity, Transfer[].class).getBody();
+            transfers = restTemplate.exchange(API_BASE_URL + "/list", HttpMethod.GET, entity, String[].class).getBody();
         } catch (RestClientResponseException | ResourceAccessException ex){
             BasicLogger.log(ex.getMessage());
         }
