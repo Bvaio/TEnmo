@@ -136,7 +136,6 @@ public class TransferJdbcDao implements TransferDao {
                 }
             }
         }
-
         return updateStatusSuccess;
     }
 

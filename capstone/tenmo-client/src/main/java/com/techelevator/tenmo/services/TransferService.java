@@ -60,7 +60,7 @@ public class TransferService {
 
         Transfer[] transfers = null;
         try{
-            transfers = restTemplate.exchange(API_BASE_URL + "/transfer/list", HttpMethod.GET, entity, Transfer[].class).getBody();
+            transfers = restTemplate.exchange(API_BASE_URL + "/list", HttpMethod.GET, entity, Transfer[].class).getBody();
         } catch (RestClientResponseException | ResourceAccessException ex){
             BasicLogger.log(ex.getMessage());
         }
