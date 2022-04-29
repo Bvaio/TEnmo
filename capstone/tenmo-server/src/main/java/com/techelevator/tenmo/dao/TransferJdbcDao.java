@@ -63,7 +63,7 @@ public class TransferJdbcDao implements TransferDao {
     @Override
     public List<String> transferList( int from_id ) {
         List<String> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_status_desc, transfer_type_desc, amount " +
+        String sql = "SELECT transfer_id, transfer_status_desc, transfer_type_desc, account_from, account_to, amount " +
                 "FROM transfer JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id\n" +
                 "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id\n" +
                 "WHERE account_from = ?";

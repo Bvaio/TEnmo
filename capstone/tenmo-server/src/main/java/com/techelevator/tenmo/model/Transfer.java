@@ -119,7 +119,7 @@ public class Transfer {
         return "Transfer ID: " + transfer_id + "  ||  amount: " + amount;
     }
 
-    public String display() {
+    public String details() {
         return "Id: " + transfer_id +
         "\nFrom: " + account_from +
         "\nTo: " + account_to +

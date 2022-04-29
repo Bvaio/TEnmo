@@ -101,7 +101,9 @@ public class App {
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
         for (String transfer : transferService.transferList(currentUser)) {
+            System.out.println();
             System.out.println(transfer);
+            System.out.println();
         }
 
 
