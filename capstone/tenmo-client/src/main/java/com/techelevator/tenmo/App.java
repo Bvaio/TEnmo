@@ -11,6 +11,7 @@ import com.techelevator.tenmo.services.TransferService;
 import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 public class App {
 
@@ -117,12 +118,24 @@ public class App {
         for (String user: transferService.listUsers(currentUser)){
             System.out.println(user);
         }
+        int toUserId = consoleService.promptForInt("Please enter the user id of the recipient: ");
+        BigDecimal amountToSend = consoleService.promptForBigDecimal("Please enter the amount of money you wish to send: ");
+        Transfer transfer = new Transfer();
+        transfer.setTransfer_type_id(2);
+        transfer.setTransfer_status_id(1);
+        transfer.setAccount_from(currentUser.getUser().getId().intValue());
+        transfer.setAccount_to(toUserId);
+        transfer.setAmount(amountToSend);
+
+        transferService.addTransfer(currentUser, transfer);
+        transferService.sendBucks(currentUser, transfer);
+        }
 
 
 //        BigDecimal amountToSend = consoleService.promptForBigDecimal("amount to send");
 //        System.out.println(transferService.sendBucks());
 		
-	}
+
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub

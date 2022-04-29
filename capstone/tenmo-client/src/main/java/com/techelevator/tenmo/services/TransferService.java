@@ -27,29 +27,13 @@ public class TransferService {
         API_BASE_URL = url;
     }
 
-    public String[] listUsers(AuthenticatedUser currentUser){
+    public String[] listUsers(AuthenticatedUser currentUser) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(currentUser.getToken());
         HttpEntity<String[]> entity = new HttpEntity<>(httpHeaders);
         return restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, entity, String[].class).getBody();
-
-//        JsonNode jsonNode;
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        List<String> usersList = new ArrayList<>();
-//
-//        try {
-//            jsonNode = objectMapper.readTree(responseEntity.getBody());
-//
-//        }catch (RestClientResponseException ex){
-//            BasicLogger.log(ex.getMessage());
-//        } catch (JsonMappingException e) {
-//            e.printStackTrace();
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
     }
 
     public String[] transferList(AuthenticatedUser currentUser){
@@ -67,12 +51,27 @@ public class TransferService {
         return transfers;
     }
 
-    public boolean sendBucks(AuthenticatedUser currentUser, int to_id, BigDecimal amount){
+    public boolean sendBucks(AuthenticatedUser currentUser, Transfer transfer){
        boolean success = false;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(currentUser.getToken());
-        HttpEntity<Transfer> entity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, httpHeaders);
+
+        try {
+            success = restTemplate.exchange(API_BASE_URL + "/transfer/send", HttpMethod.PUT, entity, Boolean.class).getBody();
+        }catch (RestClientResponseException ex){
+            BasicLogger.log(ex.getMessage());
+        }
+        return success;
+    }
+
+    public boolean addTransfer(AuthenticatedUser currentUser, Transfer transfer){
+        boolean success = false;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(currentUser.getToken());
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, httpHeaders);
 
         try {
             success = restTemplate.exchange(API_BASE_URL + "/transfer", HttpMethod.POST, entity, Boolean.class).getBody();
@@ -81,7 +80,6 @@ public class TransferService {
         }
         return success;
     }
-
 
 
 }
