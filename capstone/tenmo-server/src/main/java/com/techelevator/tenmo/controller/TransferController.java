@@ -23,8 +23,8 @@ public class TransferController {
     }
 
     @RequestMapping( path = "/users", method = RequestMethod.GET )
-    public List< String > listUsers() {
-        return transferDao.userList();
+    public List< User > listUsers(Principal principal) {
+        return transferDao.userList(userDao.findIdByUsername(principal.getName()));
     }
 
 //    @RequestMapping(path = "/list", method = RequestMethod.GET)

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import com.techelevator.util.BasicLoggerException;
 import org.springframework.http.*;
@@ -20,20 +21,20 @@ import java.util.List;
 
 
 public class TransferService {
-    private String API_BASE_URL;
-    private RestTemplate restTemplate = new RestTemplate();
+    private final String API_BASE_URL;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public TransferService( String url ) {
         API_BASE_URL = url;
     }
 
-    public String[] listUsers(AuthenticatedUser currentUser) {
+    public User[] listUsers(AuthenticatedUser currentUser) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(currentUser.getToken());
         HttpEntity<String[]> entity = new HttpEntity<>(httpHeaders);
-        return restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, entity, String[].class).getBody();
+        return restTemplate.exchange(API_BASE_URL + "/users", HttpMethod.GET, entity, User[].class).getBody();
     }
 
     public String[] transferList(AuthenticatedUser currentUser){

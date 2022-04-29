@@ -15,29 +15,36 @@ import java.util.List;
 public class TransferJdbcDao implements TransferDao {
     private JdbcTemplate jdbcTemplate;
     private AccountJdbcDao accountJdbcDao;
+    private JdbcUserDao jdbcUserDao;
 
-    public TransferJdbcDao(JdbcTemplate jdbcTemplate, AccountJdbcDao accountJdbcDao) {
+    public TransferJdbcDao(JdbcTemplate jdbcTemplate, AccountJdbcDao accountJdbcDao, JdbcUserDao jdbcUserDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.accountJdbcDao = accountJdbcDao;
+        this.jdbcUserDao = jdbcUserDao;
     }
 
 
     @Override
-    public List< String > userList() {
-        List< String > users = new ArrayList<>();
+    public List<User > userList(int user_id) {
 
-        String sql = "SELECT user_id, username FROM tenmo_user";
-        SqlRowSet results = jdbcTemplate.queryForRowSet( sql );
-        while( results.next() ) {
+        List< User > users = new ArrayList<>();
+        for (User user: jdbcUserDao.findAll()) {
+            if(user.getId() != user_id){
+                users.add(user);
+            }
+        }
+//        String sql = "SELECT user_id, username FROM tenmo_user WHERE user_id != ?";
+//        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, user_id );
+//        while( results.next() ) {
 //            User user = new User();
 //            user.setId( results.getLong( "user_id" ) );
 //            user.setUsername( results.getString( "username") );
 //            user.setActivated( results.getBoolean( "activated" ) );
 //            user.setAuthorities( results.getRow( "authorities" ) );
-            long id = results.getLong( "user_id" );
-            String username = results.getString( "username");
-            users.add( "ID: " + id + "  ||  Username: " + username );
-        }
+//            long id = results.getLong( "user_id" );
+//            String username = results.getString( "username");
+//            users.add( "ID: " + id + "  ||  Username: " + username );
+//        }
         return users;
     }
 

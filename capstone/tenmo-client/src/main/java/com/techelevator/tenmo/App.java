@@ -1,9 +1,6 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -12,6 +9,7 @@ import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 
 public class App {
 
@@ -19,7 +17,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
-    private final AccountService accountService = new AccountService( API_BASE_URL );
+    private final AccountService accountService = new AccountService(API_BASE_URL);
     private final TransferService transferService = new TransferService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
@@ -36,6 +34,7 @@ public class App {
             mainMenu();
         }
     }
+
     private void loginMenu() {
         int menuSelection = -1;
         while (menuSelection != 0 && currentUser == null) {
@@ -94,52 +93,67 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-        System.out.println( accountService.viewCurrentBalance( currentUser ) );
-	}
+    private void viewCurrentBalance() {
+        // TODO Auto-generated method stub
+        System.out.println(accountService.viewCurrentBalance(currentUser));
+    }
 
-	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-        for(String transfer: transferService.transferList(currentUser)){
+    private void viewTransferHistory() {
+        // TODO Auto-generated method stub
+        for (String transfer : transferService.transferList(currentUser)) {
             System.out.println(transfer);
         }
 
-		
-	}
 
-	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	private void sendBucks() {
-		// TODO Auto-generated method stub
-        for (String user: transferService.listUsers(currentUser)){
-            System.out.println(user);
+    private void viewPendingRequests() {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void sendBucks() {
+        // TODO Auto-generated method stub
+        User[] users = transferService.listUsers(currentUser);
+        for (User user : users) {
+            System.out.println(user.getId() + " " + user.getUsername());
         }
         int toUserId = consoleService.promptForInt("Please enter the user id of the recipient: ");
-        BigDecimal amountToSend = consoleService.promptForBigDecimal("Please enter the amount of money you wish to send: ");
-        Transfer transfer = new Transfer();
-        transfer.setTransfer_type_id(2);
-        transfer.setTransfer_status_id(1);
-        transfer.setAccount_from(currentUser.getUser().getId().intValue());
-        transfer.setAccount_to(toUserId);
-        transfer.setAmount(amountToSend);
-
-        transferService.addTransfer(currentUser, transfer);
-        transferService.sendBucks(currentUser, transfer);
+        boolean isInList = false;
+        for (User user : users) {
+            if (user.getId() == toUserId) {
+                isInList = true;
+                break;
+            }
         }
+        if (isInList) {
+            BigDecimal amountToSend = consoleService.promptForBigDecimal("Please enter the amount of money you wish to send: $");
+            if (amountToSend.compareTo(BigDecimal.valueOf(0)) > 0) {
+                Transfer transfer = new Transfer();
+                transfer.setTransfer_type_id(2);
+                transfer.setTransfer_status_id(1);
+                transfer.setAccount_from(currentUser.getUser().getId().intValue());
+                transfer.setAccount_to(toUserId);
+                transfer.setAmount(amountToSend);
+
+                transferService.addTransfer(currentUser, transfer);
+                transferService.sendBucks(currentUser, transfer);
+            } else {
+                System.out.println("Please enter a valid amount.");
+            }
+        } else {
+            System.out.println("Please enter a valid user id number.");
+        }
+    }
 
 
 //        BigDecimal amountToSend = consoleService.promptForBigDecimal("amount to send");
 //        System.out.println(transferService.sendBucks());
-		
 
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+    private void requestBucks() {
+        // TODO Auto-generated method stub
+
+    }
 
 }
