@@ -120,19 +120,22 @@ public class TransferJdbcDao implements TransferDao {
 //    }
 @Override
     public boolean sendBucks( int from_id, Transfer transfer ) {
-        int fromID = getAccountIdFromUserId(from_id);
-        boolean isFromAccount = fromID != transfer.getAccount_to();
+        int fromAccountID = getAccountIdFromUserId(from_id);
+//        boolean isFromAccount = fromID != transfer.getAccount_to();
         boolean updateStatusSuccess = false;
 
-        if ( isFromAccount && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 1 ) {
-            int toID = transfer.getAccount_to();
+        if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 1 ) {
+            int toAccountID = transfer.getAccount_to();
             boolean updateBalance = false;
 
-            if ( checkBalanceAccount( from_id, transfer.getAmount() ) && isSameAccountId( fromID, toID ) ) {
-                updateBalance = updatedBalance( fromID, toID, transfer.getAmount() );
+            if (checkBalanceAccount(from_id, transfer.getAmount())) {
+                updateBalance = updatedBalance(fromAccountID, toAccountID, transfer.getAmount());
                 if (updateBalance) {
                     String updateStatus = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?";
-                    updateStatusSuccess = jdbcTemplate.update( updateStatus, transfer.getTransfer_id() ) == 1;
+                    updateStatusSuccess = jdbcTemplate.update(updateStatus, transfer.getTransfer_id()) == 1;
+                } else {
+                    String updateStatus = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?";
+                    jdbcTemplate.update(updateStatus, transfer.getTransfer_id());
                 }
             }
         }
