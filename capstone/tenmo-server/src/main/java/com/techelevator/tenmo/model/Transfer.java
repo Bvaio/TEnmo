@@ -121,8 +121,8 @@ public class Transfer {
 
     public String details() {
         return "Id: " + transfer_id +
-        "\nFrom: " + account_from +
-        "\nTo: " + account_to +
+        "\nFrom: " + userNameFrom +
+        "\nTo: " + userNameTo +
         "\nType: " + transfer_type_desc +
         "\nStatus: " + transfer_status_desc +
         "\nAmount: " + amount;
