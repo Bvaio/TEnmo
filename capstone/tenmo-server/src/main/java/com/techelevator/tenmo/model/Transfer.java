@@ -120,12 +120,12 @@ public class Transfer {
     }
 
     public String display() {
-        return "Id: " + transfer_id
-        "\nFrom: " +
-        "\nTo: " +
-        "\nType: " +
-        "\nStatus: " +
-        "\nAmount: " +
+        return "Id: " + transfer_id +
+        "\nFrom: " + account_from +
+        "\nTo: " + account_to +
+        "\nType: " + transfer_type_desc +
+        "\nStatus: " + transfer_status_desc +
+        "\nAmount: " + amount;
 
     }
 }

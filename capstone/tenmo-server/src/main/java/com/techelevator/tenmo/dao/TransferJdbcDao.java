@@ -70,7 +70,7 @@ public class TransferJdbcDao implements TransferDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ) );
         while ( results.next() ) {
             Transfer transfer = mapRowToTransferDisplay( results );
-            transfers.add( transfer.toString() );
+            transfers.add( transfer.display());
         }
         return transfers;
     }
