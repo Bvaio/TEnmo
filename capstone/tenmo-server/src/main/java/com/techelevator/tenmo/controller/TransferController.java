@@ -31,9 +31,15 @@ public class TransferController {
 //    public List<Transfer> transferList( /*Principal principal */){
 //        return transferDao.transferList( /*userDao.findIdByUsername( principal.getName() )*/ );
 //    }
-    @RequestMapping(path = "/list", method = RequestMethod.GET)
-    public List<String> transferList( Principal principal ){
+
+    @RequestMapping( path = "/list", method = RequestMethod.GET )
+    public List< Transfer > transferList( Principal principal ) {
         return transferDao.transferList( userDao.findIdByUsername( principal.getName() ) );
+    }
+
+    @RequestMapping(path = "/list/{transfer_id}", method = RequestMethod.GET)
+    public Transfer transferListDetail( Principal principal, @PathVariable int transfer_id ){
+        return transferDao.transferListDetail( userDao.findIdByUsername( principal.getName() ), transfer_id );
     }
 
 //    @RequestMapping( path = "/transfer/{to_id}/{amount}", method = RequestMethod.POST )

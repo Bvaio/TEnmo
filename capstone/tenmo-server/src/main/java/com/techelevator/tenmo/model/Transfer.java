@@ -116,7 +116,9 @@ public class Transfer {
 
     @Override
     public String toString() {
-        return "Transfer ID: " + transfer_id + "  ||  amount: " + amount;
+        String fromTo = transfer_type_id == 1 ? "  ||  From: " : "  ||  To: ";
+        String fromToUser = transfer_type_id == 1 ? userNameFrom : userNameTo;
+        return "Transfer ID: " + transfer_id + fromTo + fromToUser+ "  ||  amount: " + amount;
     }
 
     public String details() {

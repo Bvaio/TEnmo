@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.Bidi;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,19 +59,40 @@ public class TransferJdbcDao implements TransferDao {
 //        }
 //        return transfers;
 //    }
+
     @Override
-    public List<String> transferList( int from_id ) {
-        List<String> transfers = new ArrayList<>();
+    public List< Transfer > transferList( int from_id ) {
+        List< Transfer > transfers = new ArrayList<>();
+        int userAccountId = getAccountIdFromUserId( from_id );
+        String sql = "SELECT transfer_id, transfer_status_id, transfer_type_id, account_from, account_to, amount FROM transfer WHERE account_from = ? OR account_to = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, userAccountId, userAccountId );
+        while ( results.next() ) {
+            Transfer transfer = new Transfer();
+            transfer.setTransfer_id(results.getInt("transfer_id"));
+            transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
+            transfer.setTransfer_status_id(results.getInt("transfer_status_id"));
+            transfer.setUserNameFrom( getUsernameFromAccountId( results.getInt("account_from") ) );
+            transfer.setUserNameTo( getUsernameFromAccountId( results.getInt("account_to") ) );
+            transfer.setAmount(results.getBigDecimal("amount"));
+
+            transfers.add( transfer );
+        }
+        return transfers;
+    }
+
+    @Override
+    public Transfer transferListDetail( int from_id, int transfer_id ) {
+        Transfer transfer = null;
+        int userAccountId = getAccountIdFromUserId( from_id );
         String sql = "SELECT transfer_id, transfer_status_desc, transfer_type_desc, account_from, account_to, amount " +
                 "FROM transfer JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id\n" +
                 "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id\n" +
-                "WHERE account_from = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, getAccountIdFromUserId( from_id ) );
+                "WHERE account_from = ? OR account_to = ? AND transfer_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet( sql, userAccountId, userAccountId, transfer_id );
         while ( results.next() ) {
-            Transfer transfer = mapRowToTransferDisplay( results );
-            transfers.add( transfer.display());
+            transfer = mapRowToTransferDisplay( results );
         }
-        return transfers;
+        return transfer;
     }
 
 
@@ -100,7 +120,26 @@ public class TransferJdbcDao implements TransferDao {
     @Override
     public boolean addTransfer( int from_id, Transfer transfer ) {
         String sql = "INSERT INTO transfer ( transfer_type_id, transfer_status_id, account_from, account_to, amount ) VALUES ( ?, ?, ?, ?, ? );";
-        return jdbcTemplate.update( sql, transfer.getTransfer_type_id(), transfer.getTransfer_status_id(), getAccountIdFromUserId( from_id ), getAccountIdFromUserId( transfer.getAccount_to() ), transfer.getAmount() ) == 1;
+        return jdbcTemplate.update( sql, transfer.getTransfer_type_id(), transfer.getTransfer_status_id(), getAccountIdFromUserId( from_id )
+                , getAccountIdFromUserId( transfer.getAccount_to() ), transfer.getAmount() ) == 1;
+
+//        String getMadeTransfer = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount\n" +
+//                "FROM transfer \n" +
+//                "WHERE transfer_type_id = ?\n" +
+//                "AND transfer_status_id = ?\n" +
+//                "AND account_from = ?\n" +
+//                "AND account_to = ?\n" +
+//                "AND amount = ?";
+//
+//        SqlRowSet results = jdbcTemplate.queryForRowSet( getMadeTransfer, transfer.getTransfer_type_id(), transfer.getTransfer_status_id()
+//                , getAccountIdFromUserId( from_id ), getAccountIdFromUserId( transfer.getAccount_to() ), transfer.getAmount() );
+//
+//        if ( results.next() ) {
+//            return mapRowToTransfer( results );
+//        }
+//
+//        return null;
+
 
 //        if ( results.next() ) {
 //            transfer = new Transfer();
@@ -128,31 +167,30 @@ public class TransferJdbcDao implements TransferDao {
 //        }
 //        return updateStatusSuccess;
 //    }
-@Override
+    @Override
     public boolean sendBucks( int from_id, Transfer transfer ) {
         int fromAccountID = getAccountIdFromUserId(from_id);
 //        boolean isFromAccount = fromID != transfer.getAccount_to();
         boolean updateStatusSuccess = false;
 
-        if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 1 ) {
+        if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 2 ) {
             int toAccountID = getAccountIdFromUserId( transfer.getAccount_to() );
             boolean updateBalance = false;
 
-            if (checkBalanceAccount(from_id, transfer.getAmount())) {
+            if ( checkBalanceAccount(from_id, transfer.getAmount()) ) {
                 updateBalance = updatedBalance(fromAccountID, toAccountID, transfer.getAmount());
-                if (updateBalance) {
-                    String updateStatus = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?";
-                    updateStatusSuccess = jdbcTemplate.update(updateStatus, transfer.getTransfer_id()) == 1;
-                } else {
-                    String updateStatus = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?";
-                    jdbcTemplate.update(updateStatus, transfer.getTransfer_id());
-                }
+//                if (updateBalance) {
+//                    String updateStatus = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?";
+//                    return jdbcTemplate.update( updateStatus, transfer_id ) == 1;
+//                } else {
+//                    String updateStatus = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?";
+//                    jdbcTemplate.update( updateStatus, transfer_id );
+//                }
+                updateStatusSuccess = true;
             }
         }
         return updateStatusSuccess;
     }
-
-
 
     private boolean checkBalanceAccount( int from_id, BigDecimal amount ) {
         return accountJdbcDao.getBalance( from_id ).compareTo( amount ) >= 0;
