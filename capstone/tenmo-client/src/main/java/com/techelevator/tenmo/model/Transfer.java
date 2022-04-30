@@ -105,8 +105,10 @@ public class Transfer {
     }
 
     @Override
-    public String toString(){
-        return "Transfer Id: " + transfer_id + " Amount: " + amount;
+    public String toString() {
+        String fromTo = transfer_type_id == 1 ? "From: " : "   To: ";
+        String fromToUser = transfer_type_id == 1 ? userNameFrom : userNameTo;
+        return transfer_id + "    " + fromTo + fromToUser + "               $: " + amount;
     }
 
     public String details() {

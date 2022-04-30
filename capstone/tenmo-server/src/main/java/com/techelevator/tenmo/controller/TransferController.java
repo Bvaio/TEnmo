@@ -38,7 +38,7 @@ public class TransferController {
     }
 
     @RequestMapping(path = "/list/{transfer_id}", method = RequestMethod.GET)
-    public List<String> transferListDetail( Principal principal, @PathVariable int transfer_id ){
+    public Transfer transferListDetail( Principal principal, @PathVariable int transfer_id ){
         return transferDao.transferListDetail( userDao.findIdByUsername( principal.getName() ), transfer_id );
     }
 
