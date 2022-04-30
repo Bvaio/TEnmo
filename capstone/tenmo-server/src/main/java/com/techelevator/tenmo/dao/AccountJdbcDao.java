@@ -12,7 +12,7 @@ import java.security.Principal;
 public class AccountJdbcDao implements AccountDao{
     private JdbcTemplate jdbcTemplate;
 
-    public AccountJdbcDao(JdbcTemplate jdbcTemplate){
+    public AccountJdbcDao( JdbcTemplate jdbcTemplate ){
         this.jdbcTemplate = jdbcTemplate;
     }
 
