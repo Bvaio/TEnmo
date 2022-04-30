@@ -188,7 +188,7 @@ public class App {
         System.out.println("ID          From/To                 Amount");
         System.out.println("-------------------------------------------");
         for (Transfer transfer : transfers ) {
-            System.out.println( transfer.toString() );
+            System.out.println( transfer.view( currentUser.getUser().getUsername() ) );
         }
         System.out.println("---------");
     }
