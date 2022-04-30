@@ -13,15 +13,15 @@ import static org.junit.Assert.*;
 
 public class TransferJdbcDaoTest extends BaseDaoTests {
 
-    private static final User USER_1 = new User(Long.valueOf(500), "weLoveTests", "weLoveTests", "Janice");
-    private static final User USER_2 = new User(Long.valueOf(501), "sleepyTester", "sleepyTester", "Aja");
-    private static final User USER_3 = new User(Long.valueOf(502), "almostDone", "almostDone", "Pedro");
+//    private static final User USER_1 = new User(Long.valueOf(500), "weLoveTests", "weLoveTests", "Janice");
+//    private static final User USER_2 = new User(Long.valueOf(501), "sleepyTester", "sleepyTester", "Aja");
+//    private static final User USER_3 = new User(Long.valueOf(502), "almostDone", "almostDone", "Pedro");
 
 
-    private static final Transfer TRANSFER_1 = new Transfer(1000, 501, 601, new BigDecimal(50), "send", "pending" );
-    private static final Transfer TRANSFER_2 = new Transfer(1001, 502, 602, new BigDecimal(100), "send", "approved");
-    private static final Transfer TRANSFER_3 = new Transfer(1002, 501, 501, new BigDecimal(100), "send", "pending");
-    private static final Transfer TRANSFER_5 = new Transfer();
+//    private static final Transfer TRANSFER_1 = new Transfer(1000, 500, 601, new BigDecimal(50), "send", "pending" );
+//    private static final Transfer TRANSFER_2 = new Transfer(1001, 501, 602, new BigDecimal(100), "send", "approved");
+//    private static final Transfer TRANSFER_3 = new Transfer(1002, 502, 502, new BigDecimal(100), "send", "pending");
+//    private static final Transfer TRANSFER_5 = new Transfer();
 
     private TransferJdbcDao sut;
 

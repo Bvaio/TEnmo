@@ -3,6 +3,7 @@ package com.techelevator.tenmo.dao;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -15,6 +16,8 @@ public abstract class BaseDaoTests {
 
     @Autowired
     protected DataSource dataSource;
+    protected JdbcTemplate jdbcTemplate;
+
 
     /* After each test, we rollback any changes that were made to the database so that
      * everything is clean for the next test */
