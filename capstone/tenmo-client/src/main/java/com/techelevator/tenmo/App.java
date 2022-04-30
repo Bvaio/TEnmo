@@ -105,6 +105,7 @@ public class App {
         viewTransfers( transfers );
         int findTransfer = consoleService.promptForInt("Please enter transfer ID to view details (0 to cancel): ");
         if ( findTransfer > 0 ) {
+            transferDetailBox();
             String printDetail = "";
             for (Transfer transfer : transfers) {
                 if (transfer.getTransfer_id() == findTransfer) {
@@ -117,6 +118,8 @@ public class App {
                 System.out.println("Transfer Id not found");
             }
         }
+        System.out.println( "--------------------------------------------" );
+
     }
 
     private void viewPendingRequests() {
@@ -130,7 +133,6 @@ public class App {
         listUsers( users );
         int toUserId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         if ( toUserId != 0 ) {
-            transferDetailBox();
             boolean isInList = false;
             for (User user : users) {
                 if (user.getId() == toUserId) {
@@ -138,7 +140,6 @@ public class App {
                     break;
                 }
             }
-            System.out.println( "--------------------------------------------" );
             if (isInList) {
                 BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter amount: $");
                 if (amountToSend.compareTo(BigDecimal.valueOf(0)) > 0) {
