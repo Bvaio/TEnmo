@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class AccountJdbcDaoTest {
+public class AccountJdbcDaoTest extends BaseDaoTests{
 
     private static final Account ACCOUNT_1 = new Account(500, new BigDecimal(500));
     private static final Account ACCOUNT_2 = new Account(501, new BigDecimal(1000));
