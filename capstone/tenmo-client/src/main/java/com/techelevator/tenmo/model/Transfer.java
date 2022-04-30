@@ -104,11 +104,20 @@ public class Transfer {
         this.amount = amount;
     }
 
+    //    transfer Type : { 1 : Request, 2 : Send }
+    //    transfer status: { 1 : Pending, 2 : Approved, 3 : Rejected }
+
     @Override
     public String toString() {
         String fromTo = transfer_type_id == 1 ? "From: " : "   To: ";
         String fromToUser = transfer_type_id == 1 ? userNameFrom : userNameTo;
         return transfer_id + "    " + fromTo + fromToUser + "               $: " + amount;
+    }
+
+    public String view( String currentUser ) {
+        String fromTo = !currentUser.equals( userNameFrom ) ? "From: " : "  To: ";
+        String fromToUser = !currentUser.equals( userNameFrom ) ? userNameFrom : userNameTo;
+        return transfer_id + "       " + fromTo + fromToUser + "               $: " + amount;
     }
 
     public String details() {
