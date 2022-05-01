@@ -16,9 +16,6 @@ public abstract class BaseDaoTests {
 
     @Autowired
     protected DataSource dataSource;
-    protected JdbcTemplate jdbcTemplate;
-
-
     /* After each test, we rollback any changes that were made to the database so that
      * everything is clean for the next test */
     @After
