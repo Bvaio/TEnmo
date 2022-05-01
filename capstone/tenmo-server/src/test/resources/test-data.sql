@@ -75,7 +75,7 @@ VALUES (502, 'almostDone', 'unknown') ;
 INSERT INTO tenmo_user (user_id, username, password_hash)
 VALUES (503, 'funTimes', 'unknown');
 
-INSERT INTO account (account_id, user_id, balance) VALUES (400,500, 500) ;
+INSERT INTO account (account_id, user_id, balance) VALUES (400, 500, 500) ;
 INSERT INTO account (account_id, user_id, balance) VALUES (401, 501, 1000) ;
 INSERT INTO account (account_id, user_id, balance) VALUES (402, 502, 500) ;
 INSERT INTO account (account_id, user_id, balance) VALUES (403, 503, 50) ;

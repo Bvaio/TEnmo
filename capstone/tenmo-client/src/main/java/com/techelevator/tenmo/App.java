@@ -5,12 +5,8 @@ import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TransferService;
-import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
-import java.security.Principal;
-import java.sql.SQLOutput;
-import java.util.List;
 
 public class App {
 
@@ -160,11 +156,6 @@ public class App {
             }
         }
     }
-
-
-//        BigDecimal amountToSend = consoleService.promptForBigDecimal("amount to send");
-//        System.out.println(transferService.sendBucks());
-
 
     private void requestBucks() {
         // TODO Auto-generated method stub
