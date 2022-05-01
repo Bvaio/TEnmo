@@ -88,7 +88,20 @@ public class TransferJdbcDaoTest extends BaseDaoTests {
 
     @Test
     public void sendBucks_should_return_false_if_notEnoughMoney(){
-        boolean testSendBucks = transferJdbcDao.sendBucks(500, testSendMoreThanHave);
+        int userInput = 500;
+        testSendMoreThanHave.setAccount_to(userInput);
+        transferJdbcDao.addTransfer(502, testSendMoreThanHave);
+
+        boolean testSendBucks = transferJdbcDao.sendBucks(502, testSendMoreThanHave);
         Assert.assertFalse(testSendBucks);
+
+        BigDecimal testAccountSender = accountJdbcDao.getBalance(502);
+        BigDecimal expectFrom = BigDecimal.valueOf( 500 );
+        assertThat( testAccountSender  ).isEqualByComparingTo( expectFrom );
+
+        BigDecimal testAccountTo = accountJdbcDao.getBalance(500);
+        BigDecimal expectTo = BigDecimal.valueOf( 500 );
+        assertThat( testAccountTo ).isEqualByComparingTo( expectTo );
+
     }
 }
