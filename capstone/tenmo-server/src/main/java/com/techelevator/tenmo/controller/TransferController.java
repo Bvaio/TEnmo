@@ -4,10 +4,10 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -27,11 +27,6 @@ public class TransferController {
         return transferDao.userList(userDao.findIdByUsername(principal.getName()));
     }
 
-//    @RequestMapping(path = "/list", method = RequestMethod.GET)
-//    public List<Transfer> transferList( /*Principal principal */){
-//        return transferDao.transferList( /*userDao.findIdByUsername( principal.getName() )*/ );
-//    }
-
     @RequestMapping( path = "/list", method = RequestMethod.GET )
     public List< Transfer > transferList( Principal principal ) {
         return transferDao.transferList( userDao.findIdByUsername( principal.getName() ) );
@@ -42,10 +37,7 @@ public class TransferController {
         return transferDao.transferListDetail( userDao.findIdByUsername( principal.getName() ), transfer_id );
     }
 
-//    @RequestMapping( path = "/transfer/{to_id}/{amount}", method = RequestMethod.POST )
-//    public boolean addTransfer( Principal principal, @PathVariable int to_id, @PathVariable BigDecimal amount ) {
-//        return transferDao.sendBucks( userDao.findIdByUsername( principal.getName() ), to_id, amount );
-//    }
+    @ResponseStatus( HttpStatus.CREATED )
     @RequestMapping( path = "/transfer", method = RequestMethod.POST )
     public boolean addTransfer( Principal principal, @RequestBody Transfer transfer ) {
         return transferDao.addTransfer( userDao.findIdByUsername( principal.getName() ), transfer );
