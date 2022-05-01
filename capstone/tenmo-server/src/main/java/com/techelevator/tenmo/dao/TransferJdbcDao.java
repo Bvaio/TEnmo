@@ -178,7 +178,7 @@ public class TransferJdbcDao implements TransferDao {
             boolean updateBalance = false;
 
             if ( checkBalanceAccount(from_id, transfer.getAmount()) ) {
-//                updateBalance = updatedBalance(fromAccountID, toAccountID, transfer.getAmount());
+                updateBalance = updatedBalance(fromAccountID, toAccountID, transfer.getAmount());
 //                if (updateBalance) {
 //                    String updateStatus = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?";
 //                    return jdbcTemplate.update( updateStatus, transfer.getTransfer_id() ) == 1;
@@ -186,7 +186,7 @@ public class TransferJdbcDao implements TransferDao {
 //                    String updateStatus = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?";
 //                    jdbcTemplate.update( updateStatus, transfer.getTransfer_id() );
 //                }
-                updateStatusSuccess = true;
+                updateStatusSuccess = updateBalance;
             }
         }
         return updateStatusSuccess;

@@ -43,7 +43,7 @@ public class TransferJdbcDaoTest extends BaseDaoTests {
         jdbcUserDao = new JdbcUserDao(jdbcTemplate);
         accountJdbcDao = new AccountJdbcDao(jdbcTemplate);
         transferJdbcDao = new TransferJdbcDao(jdbcTemplate, accountJdbcDao, jdbcUserDao);
-        testAddedTransfer = new Transfer(1, 2, 400,403, BigDecimal.valueOf(50));
+        testAddedTransfer = new Transfer(2, 2, 400,403, BigDecimal.valueOf(50));
     }
 
 
@@ -98,16 +98,22 @@ public class TransferJdbcDaoTest extends BaseDaoTests {
 
     @Test
     public void sendBucks() {
+//        testAddedTransfer = new Transfer(1, 2, 400,403, BigDecimal.valueOf(50));
+
         int simulateUserInput = 503;
         testAddedTransfer.setAccount_to( simulateUserInput );
 
+        transferJdbcDao.addTransfer(500, testAddedTransfer);
         boolean testSendBucks = transferJdbcDao.sendBucks(500, testAddedTransfer);
         Assert.assertTrue(testSendBucks);
 
-        BigDecimal testAccount = accountJdbcDao.getBalance(500);
-        BigDecimal expected = new BigDecimal( 500 );
-        assertThat( ACCOUNT_1.getBalance() ).isEqualByComparingTo( testAccount );
+        BigDecimal testAccountFrom = accountJdbcDao.getBalance(500);
+        BigDecimal expectFrom = BigDecimal.valueOf( 450 );
+        assertThat( testAccountFrom  ).isEqualByComparingTo( expectFrom );
 
+        BigDecimal testAccountTo = accountJdbcDao.getBalance(503);
+        BigDecimal expectTo = BigDecimal.valueOf( 100 );
+        assertThat( testAccountTo ).isEqualByComparingTo( expectTo );
 
     }
 
