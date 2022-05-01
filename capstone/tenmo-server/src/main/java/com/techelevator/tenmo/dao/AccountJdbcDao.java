@@ -5,7 +5,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 
 @Component
 public class AccountJdbcDao implements AccountDao{
@@ -16,9 +15,9 @@ public class AccountJdbcDao implements AccountDao{
     }
 
     @Override
-    public BigDecimal getBalance( int id ) {
+    public BigDecimal getBalance( int current_account_id ) {
         String sql = ("SELECT balance FROM account WHERE user_id = ( SELECT user_id FROM tenmo_user WHERE user_id = ? )");
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, current_account_id);
         if (results.next()) {
             return results.getBigDecimal("balance");
         }

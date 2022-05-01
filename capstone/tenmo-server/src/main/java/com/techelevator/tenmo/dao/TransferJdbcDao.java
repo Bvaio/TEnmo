@@ -22,12 +22,11 @@ public class TransferJdbcDao implements TransferDao {
         this.jdbcUserDao = jdbcUserDao;
     }
 
-
     @Override
-    public List<User > userList(int user_id) {
+    public List<User > userList(int current_user_id) {
         List< User > users = new ArrayList<>();
         for (User user: jdbcUserDao.findAll()) {
-            if(user.getId() != user_id){
+            if(user.getId() != current_user_id){
                 users.add(user);
             }
         }
@@ -81,15 +80,16 @@ public class TransferJdbcDao implements TransferDao {
         int fromAccountID = getAccountIdFromUserId(from_id);
         boolean updateStatusSuccess = false;
 
-        if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() == 2 ) {
+        if ( isSameAccountId( from_id, transfer.getAccount_to() ) && transfer.getTransfer_type_id() == 2 && transfer.getTransfer_status_id() != 3 ) {
             int toAccountID = getAccountIdFromUserId( transfer.getAccount_to() );
             boolean updateBalance = false;
 
             if ( checkBalanceAccount(from_id, transfer.getAmount()) ) {
                 updateBalance = updatedBalance(fromAccountID, toAccountID, transfer.getAmount());
+//                work on this, transfer_id defaults to 0 when made
 //                if (updateBalance) {
 //                    String updateStatus = "UPDATE transfer SET transfer_status_id = 2 WHERE transfer_id = ?";
-//                    return jdbcTemplate.update( updateStatus, transfer.getTransfer_id() ) == 1;
+//                    updateStatusSuccess = jdbcTemplate.update( updateStatus, transfer.getTransfer_id() ) == 1;
 //                } else {
 //                    String updateStatus = "UPDATE transfer SET transfer_status_id = 3 WHERE transfer_id = ?";
 //                    jdbcTemplate.update( updateStatus, transfer.getTransfer_id() );
@@ -141,17 +141,6 @@ public class TransferJdbcDao implements TransferDao {
         return toAccountSuccess && fromAccountSuccess;
     }
 
-//    private Transfer mapRowToTransfer(SqlRowSet results) {
-//        Transfer transfer = new Transfer();
-//        transfer.setTransfer_id(results.getInt("transfer_id"));
-//        transfer.setTransfer_type_id(results.getInt("transfer_type_id"));
-//        transfer.setTransfer_status_id(results.getInt("transfer_status_id"));
-//        transfer.setAccount_from(results.getInt("account_from"));
-//        transfer.setAccount_to(results.getInt("account_to"));
-//        transfer.setAmount(results.getBigDecimal("amount"));
-//        return transfer;
-//    }
-
     private Transfer mapRowToTransferDisplay( SqlRowSet results ) {
         Transfer transfer = new Transfer();
         transfer.setTransfer_id(results.getInt("transfer_id"));
@@ -162,6 +151,5 @@ public class TransferJdbcDao implements TransferDao {
         transfer.setAmount(results.getBigDecimal("amount") );
         return transfer;
     }
-
 
 }

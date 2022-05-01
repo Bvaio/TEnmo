@@ -5,8 +5,10 @@ import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TransferService;
+import com.techelevator.util.BasicLogger;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class App {
 
@@ -92,29 +94,37 @@ public class App {
 
     private void viewCurrentBalance() {
         // TODO Auto-generated method stub
-        System.out.println(accountService.viewCurrentBalance(currentUser));
+        System.out.println("Your current account balance is:  $" + accountService.viewCurrentBalance(currentUser));
     }
 
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
         Transfer[] transfers = transferService.transferList( currentUser );
-        viewTransfers( transfers );
-        int findTransfer = consoleService.promptForInt("Please enter transfer ID to view details (0 to cancel): ");
-        if ( findTransfer > 0 ) {
-            transferDetailBox();
-            String printDetail = "";
-            for (Transfer transfer : transfers) {
-                if (transfer.getTransfer_id() == findTransfer) {
-                    printDetail = transferService.transferListDetail(currentUser, findTransfer).details();
+        if ( transfers.length > 0 ) {
+            viewTransfers(transfers);
+            int findTransfer = consoleService.promptForInt("Please enter transfer ID to view details (0 to cancel): ");
+            if (findTransfer > 0) {
+                transferDetailBox();
+                String printDetail = "";
+                for (Transfer transfer : transfers) {
+                    if (transfer.getTransfer_id() == findTransfer) {
+                        printDetail = transferService.transferListDetail(currentUser, findTransfer).details();
+                    }
+                }
+                if (printDetail.length() > 0) {
+                    System.out.println(printDetail);
+                } else {
+                    String transferIdNotFound = "Transfer Id not found for transfer id: " + findTransfer ;
+                    System.out.println( transferIdNotFound );
+                    BasicLogger.log( transferIdNotFound );
                 }
             }
-            if (printDetail.length() > 0) {
-                System.out.println(printDetail);
-            } else {
-                System.out.println("Transfer Id not found");
-            }
+            System.out.println("--------------------------------------------");
+        } else {
+            String noTransfersFound = "No transfers found for user: " + currentUser.getUser().getUsername();
+            System.out.println( noTransfersFound );
+            BasicLogger.log( noTransfersFound );
         }
-        System.out.println( "--------------------------------------------" );
 
     }
 
@@ -137,8 +147,8 @@ public class App {
                 }
             }
             if (isInList) {
-                BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter amount: $");
-                if (amountToSend.compareTo(BigDecimal.valueOf(0)) > 0) {
+                BigDecimal amountToSend = consoleService.promptForBigDecimal("Enter amount: $").setScale( 2, RoundingMode.HALF_UP );
+                if ( amountToSend.compareTo(BigDecimal.valueOf(0)) > 0 ) {
                     Transfer transfer = new Transfer();
                     transfer.setTransfer_type_id(2);
                     transfer.setTransfer_status_id(2);
@@ -149,10 +159,10 @@ public class App {
                     transferService.addTransfer(currentUser, transfer);
                     transferService.sendBucks(currentUser, transfer);
                 } else {
-                    System.out.println("Please enter a valid amount.");
+                    System.out.println("Invalid amount.");
                 }
             } else {
-                System.out.println("Please enter a valid user id number.");
+                System.out.println("Invalid user id number.");
             }
         }
     }

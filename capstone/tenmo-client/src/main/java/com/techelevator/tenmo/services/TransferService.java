@@ -56,21 +56,6 @@ public class TransferService {
         return transfer;
     }
 
-    public boolean sendBucks(AuthenticatedUser currentUser, Transfer transfer ) {
-       boolean success = false;
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.setBearerAuth(currentUser.getToken());
-        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, httpHeaders);
-
-        try {
-            success = restTemplate.exchange(API_BASE_URL + "/transfer/send", HttpMethod.PUT, entity, Boolean.class).getBody();
-        }catch (RestClientResponseException ex){
-            BasicLogger.log(ex.getMessage());
-        }
-        return success;
-    }
-
     public boolean addTransfer(AuthenticatedUser currentUser, Transfer transfer){
         boolean success = false;
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -86,5 +71,19 @@ public class TransferService {
         return success;
     }
 
+    public boolean sendBucks(AuthenticatedUser currentUser, Transfer transfer ) {
+       boolean success = false;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setBearerAuth(currentUser.getToken());
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, httpHeaders);
+
+        try {
+            success = restTemplate.exchange(API_BASE_URL + "/transfer/send", HttpMethod.PUT, entity, Boolean.class).getBody();
+        }catch (RestClientResponseException ex){
+            BasicLogger.log(ex.getMessage());
+        }
+        return success;
+    }
 
 }

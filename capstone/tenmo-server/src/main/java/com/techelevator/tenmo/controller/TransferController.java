@@ -44,7 +44,7 @@ public class TransferController {
     }
 
     @RequestMapping( path = "/transfer/send", method = RequestMethod.PUT )
-    public boolean sendBucks(Principal principal, @RequestBody Transfer transfer ) {
+    public boolean sendBucks( Principal principal, @RequestBody Transfer transfer ) {
         return transferDao.sendBucks( userDao.findIdByUsername(principal.getName()), transfer );
     }
 
