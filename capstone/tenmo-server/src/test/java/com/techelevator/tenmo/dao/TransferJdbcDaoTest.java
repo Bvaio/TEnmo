@@ -58,6 +58,25 @@ public class TransferJdbcDaoTest extends BaseDaoTests {
     }
 
     @Test
+    public void transferID_302_returns_correct_transferIdDetails() {
+        Transfer actual = transferJdbcDao.transferListDetail( 502, 302 );
+
+        int expectedTransferId = 302;
+        String expectedTransferTypeDescription = "Request";
+        String expectedTransferStatusDescription = "Approved";
+        String expectedFromUsername = "almostDone";
+        String expectedToUsername = "funTimes";
+        BigDecimal expectedAmount = BigDecimal.valueOf( 100 );
+
+        Assert.assertEquals( expectedTransferId, actual.getTransfer_id() );
+        Assert.assertEquals( expectedTransferTypeDescription, actual.getTransfer_type_desc() );
+        Assert.assertEquals( expectedTransferStatusDescription, actual.getTransfer_status_desc() );
+        Assert.assertEquals( expectedFromUsername, actual.getUserNameFrom() );
+        Assert.assertEquals( expectedToUsername, actual.getUserNameTo() );
+        assertThat( expectedAmount ).isEqualByComparingTo( actual.getAmount() );
+    }
+
+    @Test
     public void adding_a_newTransfer_should_return_true() {
         int simulateUserInput = 503;
         testAddedTransfer.setAccount_to( simulateUserInput );
