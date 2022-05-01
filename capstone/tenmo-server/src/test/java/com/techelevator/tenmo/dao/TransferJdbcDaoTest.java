@@ -1,9 +1,11 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.junit.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TransferJdbcDaoTest extends BaseDaoTests {
